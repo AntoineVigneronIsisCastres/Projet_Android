@@ -3,6 +3,7 @@ package com.example.projet_android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -20,8 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -30,6 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.projet_android.ui.theme.Projet_AndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,12 +41,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-
-            Projet_AndroidTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    Screen(windowSizeClass)
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "profile") {
+                    composable("Projet_AndroidTheme") { Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+                        ScreenProfile(windowSizeClass,navController)
+                    }
                 }
-            }
+                    composable("Films") {Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+                        ScreenFilms(windowSizeClass,navController)
+                    }
+                }
 
         }
     }
@@ -63,22 +70,25 @@ fun DefaultPreview() {
 }
 
 @Composable
-fun HeadVertical() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        MonImage()
-        NomPrenom()
-        AboutSection()
-        Links()
-        StartButton()
+fun HeadVerticalProfile(nav: NavController) {
+
+    Box(modifier = Modifier.padding(30.dp)) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            MonImage()
+            NomPrenom()
+            AboutSection()
+            Links()
+            StartButton(nav)
+        }
     }
 }
 
 @Composable
-fun HeadHorizontal() {
+fun HeadHorizontalProfile(nav: NavController) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -100,7 +110,7 @@ fun HeadHorizontal() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Links()
-            StartButton()
+            StartButton(nav)
         }
     }
 }
@@ -173,17 +183,16 @@ fun Links(){
 
 
 @Composable
-fun StartButton(){
+fun StartButton(nav: NavController){
     Spacer(modifier = Modifier.size(50.dp))
     Button(
-        onClick = { /*TODO*/ }
-    ) {
+        onClick = { nav.navigate("Films") }) {
         Text(text = "Démarrer")
     }
 }
 
 @Composable
-fun Screen(windowClass: WindowSizeClass) {
+fun ScreenProfile(windowClass: WindowSizeClass, nav: NavController) {
     Box() {
         when (windowClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
@@ -192,7 +201,7 @@ fun Screen(windowClass: WindowSizeClass) {
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    HeadVertical()
+                    HeadVerticalProfile(nav)
                 }
             }
             else -> {
@@ -200,9 +209,10 @@ fun Screen(windowClass: WindowSizeClass) {
                     Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HeadHorizontal()
+                    HeadHorizontalProfile(nav)
                 }
             }
         }
     }
+}
 }
