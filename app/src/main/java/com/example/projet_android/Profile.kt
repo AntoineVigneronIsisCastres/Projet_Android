@@ -39,16 +39,17 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewmodel : MainViewModel by viewModels()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "profile") {
-                    composable("Projet_AndroidTheme") { Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                        ScreenProfile(windowSizeClass,navController)
+            NavHost(navController = navController, startDestination = "Profile") {
+                    composable("Profile") { Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+                        ScreenProfile(windowSizeClass, navController)
                     }
                 }
                     composable("Films") {Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                        ScreenFilms(windowSizeClass,navController)
+                        ScreenFilms(windowSizeClass, navController, viewmodel)
                     }
                 }
 
