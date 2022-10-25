@@ -52,6 +52,10 @@ class MainActivity : ComponentActivity() {
                         ScreenFilms(windowSizeClass, navController, viewmodel)
                     }
                 }
+                    composable("Series") {Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+                        ScreenSeries(windowSizeClass, navController, viewmodel)
+                    }
+                }
 
         }
     }

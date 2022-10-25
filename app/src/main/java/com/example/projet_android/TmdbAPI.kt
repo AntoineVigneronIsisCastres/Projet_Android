@@ -7,4 +7,13 @@ interface TmdbAPI {
 
     @GET("trending/movie/week")
     suspend fun lastmovies(@Query("api_key") api_key: String): TmdbMovieResult
+
+    @GET("/3/search/movie")
+    suspend fun searchmovie(@Query("query") searchword: String,@Query("api_key") apikey: String, @Query("language")language: String): TmdbMovieResult
+
+    @GET("tv/popular")
+    suspend fun lastseries(@Query("api_key") api_key: String): TmdbSeriesResult
+
+    @GET("/3/search/tv")
+    suspend fun searchseries(@Query("query") searchword: String,@Query("api_key") apikey: String, @Query("language")language: String): TmdbSeriesResult
 }
