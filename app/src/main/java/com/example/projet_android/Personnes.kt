@@ -24,7 +24,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
 @Composable
-fun ScreenSeries(windowClass: WindowSizeClass, nav: NavHostController, viewmodel : MainViewModel) {
+fun ScreenPersonnes(windowClass: WindowSizeClass, nav: NavHostController, viewmodel : MainViewModel) {
 
     Box() {
         when (windowClass.widthSizeClass) {
@@ -34,7 +34,7 @@ fun ScreenSeries(windowClass: WindowSizeClass, nav: NavHostController, viewmodel
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    HeadVerticalSeries(nav, windowClass, viewmodel)
+                    HeadVerticalPersonnes(nav, windowClass, viewmodel)
                 }
             }
             else -> {
@@ -42,7 +42,7 @@ fun ScreenSeries(windowClass: WindowSizeClass, nav: NavHostController, viewmodel
                     Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HeadHorizontalSeries(nav, windowClass, viewmodel)
+                    HeadHorizontalPersonnes(nav, windowClass, viewmodel)
                 }
             }
         }
@@ -51,9 +51,9 @@ fun ScreenSeries(windowClass: WindowSizeClass, nav: NavHostController, viewmodel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun HeadVerticalSeries(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel) {
+fun HeadVerticalPersonnes(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel) {
 
-    val series by viewmodel.series.collectAsState()
+    val people by viewmodel.people.collectAsState()
 
     val searchWidgetState by viewmodel.searchWidgetState
     val searchTextState by viewmodel.searchTextState
@@ -71,7 +71,7 @@ fun HeadVerticalSeries(nav: NavController, windowClass : WindowSizeClass, viewmo
                 },
                 onSearchClicked = {
                     Log.d("Searched Text", it)
-                    viewmodel.searchSeries(it)
+                    viewmodel.searchPeople(it)
                 },
                 onSearchTriggered = {
                     viewmodel.updateSearchWidgetState(newValue = MainViewModel.SearchWidgetState.OPENED)
@@ -80,8 +80,8 @@ fun HeadVerticalSeries(nav: NavController, windowClass : WindowSizeClass, viewmo
         },
         content = {
             LazyVerticalGrid(cells = GridCells.Fixed(2)) {
-                items(series) {
-                        serie -> SeriesThumbnail(serie)
+                items(people) {
+                        peopl -> PersonneThumbnail(peopl)
                 }
             }
         },
@@ -93,8 +93,8 @@ fun HeadVerticalSeries(nav: NavController, windowClass : WindowSizeClass, viewmo
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HeadHorizontalSeries(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel) {
-    val series by viewmodel.series.collectAsState()
+fun HeadHorizontalPersonnes(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel) {
+    val people by viewmodel.people.collectAsState()
 
     val searchWidgetState by viewmodel.searchWidgetState
     val searchTextState by viewmodel.searchTextState
@@ -112,7 +112,7 @@ fun HeadHorizontalSeries(nav: NavController, windowClass : WindowSizeClass, view
                 },
                 onSearchClicked = {
                     Log.d("Searched Text", it)
-                    viewmodel.searchSeries(it)
+                    viewmodel.searchPeople(it)
                 },
                 onSearchTriggered = {
                     viewmodel.updateSearchWidgetState(newValue = MainViewModel.SearchWidgetState.OPENED)
@@ -121,8 +121,8 @@ fun HeadHorizontalSeries(nav: NavController, windowClass : WindowSizeClass, view
         },
         content = {
             LazyVerticalGrid(cells = GridCells.Fixed(3)) {
-                items(series) {
-                        serie -> SeriesThumbnail(serie)
+                items(people) {
+                        peopl -> PersonneThumbnail(peopl)
                 }
             }
         },
@@ -133,15 +133,16 @@ fun HeadHorizontalSeries(nav: NavController, windowClass : WindowSizeClass, view
 }
 
 @Composable
-fun SeriesThumbnail(serie : TmdbSeries){
+fun PersonneThumbnail(people : TmdbPersonne){
     Card(modifier = Modifier.padding(5.dp), elevation = 10.dp) {
         Column(modifier = Modifier.padding(15.dp)) {
             AsyncImage(
-                model = "https://image.tmdb.org/t/p/w400" + serie.poster_path,
+                model = "https://image.tmdb.org/t/p/w400" + people.profile_path,
                 contentDescription = "Ma super image"
             )
-            Text(text = serie.original_name, modifier = Modifier.padding(top = 5.dp))
-            Text(text = serie.first_air_date, modifier = Modifier.padding(top = 3.dp), color = Color.Gray)
+
+            Text(text = people.name, modifier = Modifier.padding(top = 5.dp))
+            Text(text = "Popularity : "+people.popularity, modifier = Modifier.padding(top = 3.dp), color = Color.Gray)
         }
     }
 }

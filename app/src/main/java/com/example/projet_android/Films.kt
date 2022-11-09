@@ -3,6 +3,7 @@ package com.example.projet_android
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -67,7 +68,8 @@ fun ScreenFilms(windowClass: WindowSizeClass, nav: NavHostController, viewmodel 
 
 sealed class Screen(var title: String, var icon:Int, var route: String) {
     object Films : Screen("Films", R.drawable.clap, "Films")
-    object Series : Screen("Series",R.drawable.tv, "Series")
+    object Series : Screen("Series", R.drawable.tv, "Series")
+    object People : Screen("People", R.drawable.people, "Personnes")
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
@@ -75,8 +77,6 @@ sealed class Screen(var title: String, var icon:Int, var route: String) {
 fun HeadVerticalFilms(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel) {
 
     val movies by viewmodel.movies.collectAsState()
-    viewmodel.getMovies()
-
     val searchWidgetState by viewmodel.searchWidgetState
     val searchTextState by viewmodel.searchTextState
 
@@ -103,7 +103,7 @@ fun HeadVerticalFilms(nav: NavController, windowClass : WindowSizeClass, viewmod
         content = {
                 LazyVerticalGrid(cells = GridCells.Fixed(2)) {
                     items(movies) {
-                            movie -> FilmThumbnail(movie)
+                            movie -> FilmThumbnail(movie, nav)
                     }
                 }
         },
@@ -117,7 +117,6 @@ fun HeadVerticalFilms(nav: NavController, windowClass : WindowSizeClass, viewmod
 @Composable
 fun HeadHorizontalFilms(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel) {
     val movies by viewmodel.movies.collectAsState()
-    viewmodel.getMovies()
 
     val searchWidgetState by viewmodel.searchWidgetState
     val searchTextState by viewmodel.searchTextState
@@ -145,7 +144,7 @@ fun HeadHorizontalFilms(nav: NavController, windowClass : WindowSizeClass, viewm
         content = {
             LazyVerticalGrid(cells = GridCells.Fixed(3)) {
                 items(movies) {
-                        movie -> FilmThumbnail(movie)
+                        movie -> FilmThumbnail(movie, nav)
                 }
             }
         },
@@ -156,15 +155,20 @@ fun HeadHorizontalFilms(nav: NavController, windowClass : WindowSizeClass, viewm
 }
 
 @Composable
-fun FilmThumbnail(movie : TmdbMovie){
-    Card(modifier = Modifier.padding(5.dp), elevation = 10.dp) {
+fun FilmThumbnail(movie : TmdbMovie, nav: NavController){
+    Log.d("test", movie.id)
+    Card(modifier = Modifier.padding(5.dp).clickable {nav.navigate("Film" + "/${movie.id}")}, elevation = 10.dp) {
         Column(modifier = Modifier.padding(15.dp)) {
             AsyncImage(
                 model = "https://image.tmdb.org/t/p/w400" + movie.poster_path,
                 contentDescription = "Ma super image"
             )
-            Text(text = movie.original_title, modifier = Modifier.padding(top = 5.dp))
-            Text(text = movie.release_date, modifier = Modifier.padding(top = 3.dp), color = Color.Gray)
+            Text(text = movie.title, modifier = Modifier.padding(top = 5.dp))
+            Text(
+                text = movie.release_date,
+                modifier = Modifier.padding(top = 3.dp),
+                color = Color.Gray
+            )
         }
     }
 }
@@ -174,6 +178,7 @@ fun BottomNavBar(nav: NavController){
     val items = listOf(
         Screen.Films,
         Screen.Series,
+        Screen.People,
     )
     BottomNavigation(backgroundColor = MaterialTheme.colors.primary) {
         val navBackStackEntry by nav.currentBackStackEntryAsState()
@@ -193,7 +198,7 @@ fun BottomNavBar(nav: NavController){
                             }
                         }
                         launchSingleTop = true
-                        restoreState = true
+                        restoreState = false
                     }
                 }
             )

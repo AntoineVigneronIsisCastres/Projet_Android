@@ -56,6 +56,20 @@ class MainActivity : ComponentActivity() {
                         ScreenSeries(windowSizeClass, navController, viewmodel)
                     }
                 }
+                    composable("Personnes") {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.background
+                        ) {
+                            ScreenPersonnes(windowSizeClass, navController, viewmodel)
+                        }
+                    }
+                composable("Film" + "/{id}"){ NavBackStack ->
+                    val id = NavBackStack.arguments?.getString("id")
+                    if (id != null) {
+                        ScreenFilmDetail(windowSizeClass, navController, viewmodel, id.toString())
+                    }
+                }
 
         }
     }
