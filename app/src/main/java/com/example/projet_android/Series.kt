@@ -2,6 +2,7 @@ package com.example.projet_android
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -81,7 +82,7 @@ fun HeadVerticalSeries(nav: NavController, windowClass : WindowSizeClass, viewmo
         content = {
             LazyVerticalGrid(cells = GridCells.Fixed(2)) {
                 items(series) {
-                        serie -> SeriesThumbnail(serie)
+                        serie -> SeriesThumbnail(serie, nav)
                 }
             }
         },
@@ -122,7 +123,7 @@ fun HeadHorizontalSeries(nav: NavController, windowClass : WindowSizeClass, view
         content = {
             LazyVerticalGrid(cells = GridCells.Fixed(3)) {
                 items(series) {
-                        serie -> SeriesThumbnail(serie)
+                        serie -> SeriesThumbnail(serie, nav)
                 }
             }
         },
@@ -133,8 +134,8 @@ fun HeadHorizontalSeries(nav: NavController, windowClass : WindowSizeClass, view
 }
 
 @Composable
-fun SeriesThumbnail(serie : TmdbSeries){
-    Card(modifier = Modifier.padding(5.dp), elevation = 10.dp) {
+fun SeriesThumbnail(serie : TmdbSeries, nav: NavController){
+    Card(modifier = Modifier.padding(5.dp).clickable {nav.navigate("Series" + "/${serie!!.id}")}, elevation = 10.dp) {
         Column(modifier = Modifier.padding(15.dp)) {
             AsyncImage(
                 model = "https://image.tmdb.org/t/p/w400" + serie.poster_path,

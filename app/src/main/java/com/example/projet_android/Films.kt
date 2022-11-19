@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -68,8 +69,8 @@ fun ScreenFilms(windowClass: WindowSizeClass, nav: NavHostController, viewmodel 
 
 sealed class Screen(var title: String, var icon:Int, var route: String) {
     object Films : Screen("Films", R.drawable.clap, "Films")
-    object Series : Screen("Series", R.drawable.tv, "Series")
-    object People : Screen("People", R.drawable.people, "Personnes")
+    object Series : Screen("Series", R.drawable.camera_video_1, "Series")
+    object People : Screen("People", R.drawable.la_personne, "Personnes")
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
@@ -185,7 +186,7 @@ fun BottomNavBar(nav: NavController){
         val currentDestination = navBackStackEntry?.destination
         items.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                icon = { Icon(painterResource(id = screen.icon), contentDescription = screen.title, Modifier .size(25.dp)) },
                 label = { Text((screen.title)) },
                 selectedContentColor = Color.Black,
                 unselectedContentColor = Color.White,

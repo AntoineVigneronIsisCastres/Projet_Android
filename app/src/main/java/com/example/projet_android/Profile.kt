@@ -70,6 +70,12 @@ class MainActivity : ComponentActivity() {
                         ScreenFilmDetail(windowSizeClass, navController, viewmodel, id.toString())
                     }
                 }
+                composable("Series" + "/{id}"){ NavBackStack ->
+                    val id = NavBackStack.arguments?.getString("id")
+                    if (id != null) {
+                        ScreenSeriesDetail(windowSizeClass, navController, viewmodel, id.toString())
+                    }
+                }
 
         }
     }

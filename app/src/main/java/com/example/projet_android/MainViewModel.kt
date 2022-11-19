@@ -14,6 +14,7 @@ class MainViewModel : ViewModel() {
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
     val people = MutableStateFlow<List<TmdbPersonne>>(listOf())
     val movie = MutableStateFlow<MovieDetail?>(null)
+    val serie = MutableStateFlow<SeriesDetail?>(null)
     val api_key = "cef16095ad6f59a18088e4ccfe5bd29a"
 
     val retrofit = Retrofit.Builder()
@@ -68,6 +69,15 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             Log.d("test","Dans movieDetail"+id)
             movie.value = service.getmovie(id, api_key,"fr")
+
+
+        }
+    }
+
+    fun seriesDetail(id: String) {
+        viewModelScope.launch {
+            Log.d("test","Dans seriesDetail"+id)
+            serie.value = service.getseries(id, api_key,"fr")
 
 
         }
