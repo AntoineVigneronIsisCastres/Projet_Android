@@ -53,7 +53,7 @@ fun ScreenSeriesDetail(windowClass: WindowSizeClass, nav: NavHostController, vie
                     Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    //HeadHorizontalSeriesDetail(nav, windowClass, viewmodel)
+                    HeadHorizontalSeriesDetail(nav, windowClass, viewmodel, id)
                 }
             }
         }
@@ -64,6 +64,84 @@ fun ScreenSeriesDetail(windowClass: WindowSizeClass, nav: NavHostController, vie
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun HeadVerticalSeriesDetail(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel, id: String) {
+
+    val series by viewmodel.serie.collectAsState()
+    Log.d("test", "OOOOOOOOOOOOOOOO"+id.toString())
+    viewmodel.seriesDetail(id.toString())
+    val searchWidgetState by viewmodel.searchWidgetState
+    val searchTextState by viewmodel.searchTextState
+    Scaffold(
+        content = {
+            Box() {
+                if (series != null) {
+                    LazyColumn(Modifier.padding(10.dp)) {
+                        item {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = series!!.name,
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                                    style = MaterialTheme.typography.h4
+                                )
+                                AsyncImage(
+                                    model = "https://image.tmdb.org/t/p/original" + series!!.backdrop_path,
+                                    contentDescription = "affiche",
+                                    modifier = Modifier
+                                        .fillMaxSize(0.95f)
+                                        .padding(bottom = 16.dp),
+                                    contentScale = ContentScale.Fit
+                                )
+                                Text(
+                                    text = "Synopsis",
+                                    style = MaterialTheme.typography.h4,
+                                    modifier = Modifier.padding(bottom = 10.dp))
+                                Box(modifier = Modifier.padding(bottom = 20.dp, start = 10.dp, end = 10.dp)) {
+                                    Text(
+                                        text = series!!.overview,
+                                        textAlign = TextAlign.Justify,
+                                        modifier = Modifier.padding(bottom = 20.dp, start = 10.dp, end = 10.dp))
+                                }
+                                Row {
+                                    AsyncImage(
+                                        model = "https://image.tmdb.org/t/p/original" + series!!.poster_path,
+                                        contentDescription = "poster",
+                                        modifier = Modifier
+                                            .height(200.dp)
+                                            .padding(10.dp, 10.dp),
+                                        contentScale = ContentScale.Fit
+                                    )
+                                    Column (modifier = Modifier.padding(10.dp)){
+                                        Text(
+                                            text = "Date de sortie : " + series!!.first_air_date,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                        Text(text = "Genre : ", fontWeight = FontWeight.SemiBold)
+                                        for (genre in series!!.genres) {
+                                            Text(
+                                                text = "- " + genre.name,
+                                                fontStyle = FontStyle.Italic
+                                            )
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        bottomBar = {
+            BottomNavBar(nav)
+        }
+    )
+}
+
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
+@Composable
+fun HeadHorizontalSeriesDetail(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel, id: String) {
 
     val series by viewmodel.serie.collectAsState()
     Log.d("test", "OOOOOOOOOOOOOOOO"+id.toString())

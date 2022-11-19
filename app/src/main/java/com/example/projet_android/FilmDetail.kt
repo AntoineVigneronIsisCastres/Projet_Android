@@ -52,7 +52,7 @@ fun ScreenFilmDetail(windowClass: WindowSizeClass, nav: NavHostController, viewm
                     Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    //HeadHorizontalFilmDetail(nav, windowClass, viewmodel)
+                    HeadHorizontalFilmDetail(nav, windowClass, viewmodel, id)
                 }
             }
         }
@@ -63,6 +63,84 @@ fun ScreenFilmDetail(windowClass: WindowSizeClass, nav: NavHostController, viewm
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun HeadVerticalFilmDetail(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel, id: String) {
+
+    val movie by viewmodel.movie.collectAsState()
+    Log.d("test", "OOOOOOOOOOOOOOOO"+id.toString())
+    viewmodel.movieDetail(id.toString())
+    val searchWidgetState by viewmodel.searchWidgetState
+    val searchTextState by viewmodel.searchTextState
+    Scaffold(
+        content = {
+            Box() {
+                if (movie != null) {
+                    LazyColumn(Modifier.padding(10.dp)) {
+                        item {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = movie!!.title,
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                                    style = MaterialTheme.typography.h4
+                                )
+                                AsyncImage(
+                                    model = "https://image.tmdb.org/t/p/original" + movie!!.backdrop_path,
+                                    contentDescription = "affiche",
+                                    modifier = Modifier
+                                        .fillMaxSize(0.95f)
+                                        .padding(bottom = 16.dp),
+                                    contentScale = ContentScale.Fit
+                                )
+                                Text(
+                                    text = "Synopsis",
+                                    style = MaterialTheme.typography.h4,
+                                    modifier = Modifier.padding(bottom = 10.dp))
+                                Box(modifier = Modifier.padding(bottom = 20.dp, start = 10.dp, end = 10.dp)) {
+                                    Text(
+                                        text = movie!!.overview,
+                                        textAlign = TextAlign.Justify,
+                                        modifier = Modifier.padding(bottom = 20.dp, start = 10.dp, end = 10.dp))
+                                }
+                                Row {
+                                    AsyncImage(
+                                        model = "https://image.tmdb.org/t/p/original" + movie!!.poster_path,
+                                        contentDescription = "poster",
+                                        modifier = Modifier
+                                            .height(200.dp)
+                                            .padding(10.dp, 10.dp),
+                                        contentScale = ContentScale.Fit
+                                    )
+                                    Column (modifier = Modifier.padding(10.dp)){
+                                        Text(
+                                            text = "Date de sortie : " + movie!!.release_date,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                        Text(text = "Genre : ", fontWeight = FontWeight.SemiBold)
+                                        for (genre in movie!!.genres) {
+                                            Text(
+                                                text = "- " + genre.name,
+                                                fontStyle = FontStyle.Italic
+                                            )
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        bottomBar = {
+            BottomNavBar(nav)
+        }
+    )
+}
+
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
+@Composable
+fun HeadHorizontalFilmDetail(nav: NavController, windowClass : WindowSizeClass, viewmodel : MainViewModel, id: String) {
 
     val movie by viewmodel.movie.collectAsState()
     Log.d("test", "OOOOOOOOOOOOOOOO"+id.toString())
